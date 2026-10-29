@@ -3,6 +3,15 @@ package za.aop.st1.gui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import za.ac.aop.api.CallDetail;
 import za.ac.aop.api.CallDetailManager; //JAR required
 
 /**
@@ -202,7 +211,57 @@ public class ST1GUI extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             //Write code here
+            JFileChooser jc = new JFileChooser("Documents");
             
+            int value = jc.showOpenDialog(null);
+            
+            if(value != JFileChooser.APPROVE_OPTION){
+                System.out.println("Cancelled");
+                return;
+            }
+            
+            try{
+                File file = jc.getSelectedFile();
+                
+                BufferedReader br = new BufferedReader(new FileReader(file));                
+                String line = br.readLine();
+                
+                while(line != null){
+                    String[] fields = line.split(",");
+                    
+                    LocalDate date = LocalDate.parse(fields[0], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    LocalTime startTime = LocalTime.parse(fields[1], DateTimeFormatter.ofPattern("HH:mm:ss"));
+                    LocalTime endTime = LocalTime.parse(fields[2], DateTimeFormatter.ofPattern("HH:mm:ss"));
+                    long ext = Long.parseLong(fields[3]);
+                    String phone = fields[4];
+                    String provider = fields[5];
+                    
+                    CallDetail call = new CallDetail(date, startTime, endTime, ext, phone, provider);
+                    
+                    cdm.addCallDetail(call);
+                    
+                    line = br.readLine();
+                    
+                }
+                
+                taContent.setTabSize(5);
+                taContent.setText("");
+                for (CallDetail call : cdm.getCalls()) {
+                    taContent.append(call.getCallDate() + "\t" + call.getStartTime() + "\t" + call.getEndTime() +
+                            "\t" + call.getExtension() + "\t" + call.getPhoneNumber() + "\t" 
+                            + call.getNetworkProvider() + "\n");
+                }
+                
+                btnAddRecord.setEnabled(true);
+                btnCountDayCalls.setEnabled(true);
+                btnCountLongerCalls.setEnabled(true);
+               
+                
+            } catch(FileNotFoundException ex){
+                System.out.println("File error: " + ex.getMessage());
+            } catch(IOException ex){
+                System.out.println("I/O error: " + ex.getMessage());
+            }
             
         }
     }
