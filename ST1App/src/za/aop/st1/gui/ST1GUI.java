@@ -272,7 +272,42 @@ public class ST1GUI extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             //Write code here
+            String ext = (String)cmbExtensions.getSelectedItem();
+            long extension = Long.parseLong(ext);
             
+            String phone = tfPhone.getText().trim();
+            if(phone.length() == 10){
+                String provider = tfProvider.getText().trim();
+                if("MTN".equals(provider) || "Vodacom".equals(provider) || 
+                        "CellC".equals(provider) || "Telkom".equals(provider)){
+                    LocalDate date = LocalDate.now();
+                    LocalTime startTime = LocalTime.now();
+                    LocalTime endTime = startTime.plusMinutes(3).plusSeconds(24);  
+                    
+                    CallDetail cd = new CallDetail(date, startTime, endTime, extension, phone, provider);
+                    cdm.addCallDetail(cd);
+                    
+                    taContent.setText("");
+                    taContent.setTabSize(5);
+                    for (CallDetail call : cdm.getCalls()) {
+                        taContent.append(call.getCallDate() + "\t" + call.getStartTime() + "\t" + call.getEndTime() +
+                                "\t" + call.getExtension() + "\t" + call.getPhoneNumber() + "\t" 
+                                + call.getNetworkProvider() + "\n");
+                    }
+                    
+                    tfPhone.setText("");
+                    tfProvider.setText("");
+                    tfSentence.setText("");
+                    cmbExtensions.setSelectedIndex(0);
+                    
+                    JOptionPane.showMessageDialog(rootPane, "Record added");
+                    
+                } else{
+                    JOptionPane.showMessageDialog(null, "Provider invalid.");
+                }
+            } else{
+                JOptionPane.showMessageDialog(null, "Phone number length invalid.");
+            }             
             
         }
     }
