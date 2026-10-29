@@ -135,7 +135,15 @@ public class ST1GUI extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             //Write code here
+            String sent = tfSentence.getText().trim();
             
+            String output = "";
+            
+            for (int k = sent.length() - 1; k > 0; k--) {
+                output += sent.charAt(k);
+            }
+            
+            lblReversedSentence.setText(output);
             
         }
     }
