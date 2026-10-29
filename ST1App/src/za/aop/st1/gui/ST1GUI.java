@@ -113,8 +113,18 @@ public class ST1GUI extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             //Write code here
+            String sent = tfSentence.getText().trim();
             
+            String[] words = sent.split("[\\s+,!]+");
             
+            String output = "";
+            
+            for (String word : words) {
+                output += word + word.length() + " "; 
+            }
+            
+            lblMapWordLength.setForeground(Color.magenta);
+            lblMapWordLength.setText(output);
         }
         
     }
