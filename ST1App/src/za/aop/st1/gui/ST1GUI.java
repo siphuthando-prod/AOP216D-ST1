@@ -318,8 +318,16 @@ public class ST1GUI extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             //Write code here
+            int count = 0;
             
+            for (CallDetail call : cdm.getCalls()) {
+                int duration = call.getEndTime().toSecondOfDay() - call.getStartTime().toSecondOfDay();
+                if(duration >= 120){
+                    count++;
+                }
+            }
             
+            JOptionPane.showMessageDialog(rootPane, count + " calls were longer than 2 minutes");
         }
     }
     
