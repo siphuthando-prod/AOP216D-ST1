@@ -4,13 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import za.ac.aop.api.CallDetail;
 import za.ac.aop.api.CallDetailManager; //JAR required
 
@@ -367,8 +371,26 @@ public class ST1GUI extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             //Write code here
+            String records = taContent.getText();
             
+            JFileChooser jc = new JFileChooser(".");
+            int value = jc.showSaveDialog(null);
             
+            if(value != JFileChooser.APPROVE_OPTION){
+                JOptionPane.showMessageDialog(rootPane, "Cancelled.");
+                return;
+            }
+            
+            try{
+                File file = jc.getSelectedFile();
+                BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+                bw.write(records);
+            } catch(FileNotFoundException ex){
+                JOptionPane.showMessageDialog(rootPane, "File error: " + ex.getMessage());
+            } catch (IOException ex) {
+                Logger.getLogger(ST1GUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                        
         }
     }
     
