@@ -337,7 +337,26 @@ public class ST1GUI extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             //Write code here
+            LocalDate currentDate = LocalDate.MIN;
+            int count = 1, highCount = 0;
+            LocalDate highDate = LocalDate.MIN;
             
+            for (CallDetail call : cdm.getCalls()) {
+                if(!call.getCallDate().equals(currentDate)){
+                    currentDate = call.getCallDate();
+                    
+                    if(count > highCount){
+                        highCount = count;
+                        highDate = currentDate;
+                    }
+                    count = 1;
+                } else{
+                    count++;
+                }
+            }
+            
+            JOptionPane.showMessageDialog(rootPane, highCount + " were the most recorded calls on " 
+                    + highDate.format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
             
         }
     }
